@@ -141,6 +141,17 @@ def load_data_to_train_and_test():
     train_set.to_csv('train_set_jobs.csv', index=False)
     test_set.to_csv('test_set_jobs.csv', index=False)
 
+def confusion_matrix_show(cf_matrix):
+    group_names = ['True Neg','False Pos','False Neg','True Pos']
+    cf_matrix_np = np.array(cf_matrix)
+    group_counts = ["{0:0.0f}".format(value) for value in cf_matrix_np.flatten()]
+    group_percentages = ["{0:.2%}".format(value) for value in cf_matrix_np.flatten() / np.sum(cf_matrix_np)]
+    labels = [f"{v1}\n{v2}\n{v3}" for v1, v2, v3 in zip(group_names,group_counts,group_percentages)]
+    labels = np.asarray(labels).reshape(2,2)
+    sns.heatmap(cf_matrix, annot=labels, fmt='', cmap='Blues')
+    plt.xlabel('Predicted labels')
+    plt.ylabel('True labels')
+    plt.show()
 
 if __name__ == '__main__':
     address = r'jobs_in_data.csv'  # Defining the file path for the CSV file
@@ -160,9 +171,10 @@ if __name__ == '__main__':
     # 6. Outlier detection: Identify and investigate potential outliers in numerical variables
     # 7. Feature engineering: Create new features based on domain knowledge or relationships between existing features
 
-    # bar_plot()
+    bar_plot()
     load_data_to_train_and_test()
 
     train_data = pd.read_csv('train_set_jobs.csv')
     print(train_data.head(3))
+    # confusion_matrix_show([[100, 15], [10, 150]])
 
